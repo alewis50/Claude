@@ -3,11 +3,510 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Anthropic Patterns</title>
-    <link rel="stylesheet" href="/normalize.css" />
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="./src/client.tsx" defer></script>
-  </body>
-</html>
+    <title>Telegram Command Bot Builder</title>
+    <style>
+     @import url('https://fonts.googleapis.com/
+    
+    :root{
+    --bg: #0d0f14;
+    --surface: #151821;
+    --border: #1e2433;
+    --accent: #2AABEE;
+    --accent2: #00d4aa;
+    --text: #e2e8f0;
+    --muted: #6b7a99;
+    --danger: #ff4757;
+  }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    padding: 24px 16px;
+  }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    padding: 24px 16px;
+  }
+
+ .header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  .header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+  }
+
+ .header p {
+    color: var(--muted);
+    margin-top: 6px;
+    font-size: 0.9rem;
+  }
+
+  .tg-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(42,171,238,0.12);
+    border: 1px solid rgba(42,171,238,0.3);
+    color: var(--accent);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+.card h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 6px;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    margin-bottom: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--accent);
+  }
+
+  select option { background: var(--surface); }
+
+  textarea { resize: vertical; min-height: 70px; }
+
+  .row { display: flex; gap: 12px; }
+  .row > * { flex: 1; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    width: 100%;
+    margin-top: 4px;
+  }
+  .btn-primary:hover { background: #1a9bd6; }
+
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  .btn-danger {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--danger);
+    padding: 4px 8px;
+    font-size: 0.8rem;
+  }
+  .btn-danger:hover { border-color: var(--danger); }
+
+  .commands-list { display: flex; flex-direction: column; gap: 10px; }
+
+ .command-item {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .cmd-info { flex: 1; }
+
+  .cmd-name {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+
+  .cmd-url {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--muted);
+    font-size: 0.75rem;
+    margin-top: 4px;
+    word-break: break-all;
+  }
+
+  .cmd-method {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-left: 8px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .method-GET { background: rgba(0,212,170,0.15); color: var(--accent2); }
+  .method-POST { background: rgba(255,165,0,0.15); color: orange; }
+
+  .empty-state {
+    text-align: center;
+    color: var(--muted);
+    padding: 30px;
+    font-size: 0.85rem;
+  }
+
+  .code-section { position: relative; }
+
+  .code-block {
+    background: #080a0f;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: #a8b4d0;
+    white-space: pre;
+    overflow-x: auto;
+    line-height: 1.7;
+    max-height: 340px;
+    overflow-y: auto;
+  }
+
+  .copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.72rem;
+    cursor: pointer;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+  .tabs { display: flex; gap: 8px; margin-bottom: 14px; }
+  .tab {
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    background: transparent;
+    transition: all 0.2s;
+  }
+  .tab.active { background: var(--accent); color: #000; border-color: var(--accent); }
+
+  .kw { color: #c792ea; }
+  .str { color: #c3e88d; }
+  .fn { color: #82aaff; }
+  .cm { color: #546e7a; }
+  .num { color: #f78c6c; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="tg-badge">✈ TELEGRAM BOT</div>
+  <h1>Command Bot Builder</h1>
+  <p>Define commands that fetch data from APIs and send results to users</p>
+</div>
+
+<!-- Bot Config -->
+<div class="card">
+  <h2>⚙️ Bot Configuration</h2>
+  <label>Bot Token (from @BotFather)</label>
+  <input type="text" id="botToken" placeholder="1234567890:ABCdefGHIjklMNOpqrSTUvwxYZ" />
+  <label>Bot Username</label>
+  <input type="text" id="botUsername" placeholder="my_awesome_bot" />
+</div>
+
+<!-- Add Command -->
+<div class="card">
+  <h2>➕ Add Command</h2>
+  <div class="row">
+    <div>
+      <label>Command Name</label>
+      <input type="text" id="cmdName" placeholder="price" />
+    </div>
+    <div>
+      <label>HTTP Method</label>
+      <select id="cmdMethod">
+        <option value="GET">GET</option>
+        <option value="POST">POST</option>
+      </select>
+    </div>
+  </div>
+  <label>API URL (use {arg} for user input)</label>
+  <input type="text" id="cmdUrl" placeholder="https://api.coinpaprika.com/v1/tickers/btc-bitcoin" />
+  <label>Response Template (use {field} to extract JSON fields)</label>
+  <textarea id="cmdTemplate" placeholder="Price: ${price.USD.price}&#10;Market Cap: ${price.USD.market_cap}"></textarea>
+  <label>Description</label>
+  <input type="text" id="cmdDesc" placeholder="Get cryptocurrency price" />
+  <button class="btn btn-primary" onclick="addCommand()">+ Add Command</button>
+</div>
+
+<!-- Commands List -->
+<div class="card">
+  <h2>📋 Commands</h2>
+  <div class="commands-list" id="commandsList">
+    <div class="empty-state">No commands yet. Add one above ↑</div>
+  </div>
+</div>
+
+<!-- Generated Code -->
+<div class="card">
+  <h2>📦 Generated Bot Code</h2>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('python')">Python</button>
+    <button class="tab" onclick="switchTab('node')">Node.js</button>
+  </div>
+  <div class="code-section">
+    <button class="copy-btn" onclick="copyCode()">Copy</button>
+    <div class="code-block" id="codeBlock">
+<span class="cm"># Configure your bot above to generate code</span>
+    </div>
+  </div>
+</div>
+
+<script>
+let commands = [];
+let currentTab = 'python';
+
+function addCommand() {
+  const name = document.getElementById('cmdName').value.trim().replace(/^\//, '');
+  const method = document.getElementById('cmdMethod').value;
+  const url = document.getElementById('cmdUrl').value.trim();
+  const template = document.getElementById('cmdTemplate').value.trim();
+  const desc = document.getElementById('cmdDesc').value.trim();
+
+  if (!name || !url) { alert('Command name and URL are required.'); return; }
+
+  commands.push({ name, method, url, template, desc });
+  renderCommands();
+  generateCode();
+
+  document.getElementById('cmdName').value = '';
+  document.getElementById('cmdUrl').value = '';
+  document.getElementById('cmdTemplate').value = '';
+  document.getElementById('cmdDesc').value = '';
+}
+
+function removeCommand(i) {
+  commands.splice(i, 1);
+  renderCommands();
+  generateCode();
+}
+
+function renderCommands() {
+  const el = document.getElementById('commandsList');
+  if (!commands.length) {
+    el.innerHTML = '<div class="empty-state">No commands yet. Add one above ↑</div>';
+    return;
+  }
+  el.innerHTML = commands.map((c, i) => `
+    <div class="command-item">
+      <div class="cmd-info">
+        <div class="cmd-name">/${c.name} <span class="cmd-method method-${c.method}">${c.method}</span></div>
+        <div class="cmd-url">${c.url}</div>
+        ${c.desc ? `<div style="color:#6b7a99;font-size:0.75rem;margin-top:4px">${c.desc}</div>` : ''}
+      </div>
+      <button class="btn btn-danger" onclick="removeCommand(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function generateCode() {
+  if (currentTab === 'python') generatePython();
+  else generateNode();
+}
+
+function generatePython() {
+  const token = document.getElementById('botToken').value || 'YOUR_BOT_TOKEN';
+
+  let code = `<span class="cm"># Telegram Command Bot - Auto Generated
+# Install: pip install python-telegram-bot requests</span>
+
+<span class="kw">import</span> requests
+<span class="kw">from</span> telegram <span class="kw">import</span> Update
+<span class="kw">from</span> telegram.ext <span class="kw">import</span> ApplicationBuilder, CommandHandler, ContextTypes
+
+TOKEN = <span class="str">"${token}"</span>
+
+`;
+
+  commands.forEach(c => {
+    const hasArg = c.url.includes('{arg}') || c.template.includes('{arg}');
+    code += `<span class="kw">async def</span> <span class="fn">cmd_${c.name}</span>(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    <span class="kw">try</span>:`;
+
+    if (hasArg) {
+      code += `
+        arg = <span class="str">" "</span>.join(context.args) <span class="kw">if</span> context.args <span class="kw">else</span> <span class="str">""</span>
+        url = <span class="str">"${c.url}"</span>.replace(<span class="str">"{arg}"</span>, arg)`;
+    } else {
+      code += `
+        url = <span class="str">"${c.url}"</span>`;
+    }
+
+    code += `
+        res = requests.${c.method.toLowerCase()}(url, timeout=<span class="num">10</span>)
+        data = res.json()
+        <span class="cm"># Template: ${c.template || 'Raw JSON response'}</span>
+        msg = str(data)
+        <span class="kw">await</span> update.message.reply_text(msg)
+    <span class="kw">except</span> Exception <span class="kw">as</span> e:
+        <span class="kw">await</span> update.message.reply_text(<span class="str">f"Error: {e}"</span>)
+
+`;
+  });
+
+  code += `<span class="kw">def</span> <span class="fn">main</span>():
+    app = ApplicationBuilder().token(<span class="str">"${token}"</span>).build()
+`;
+
+  commands.forEach(c => {
+    code += `    app.add_handler(CommandHandler(<span class="str">"${c.name}"</span>, cmd_${c.name}))
+`;
+  });
+
+  code += `    app.run_polling()
+
+<span class="kw">if</span> __name__ == <span class="str">"__main__"</span>:
+    main()`;
+
+  document.getElementById('codeBlock').innerHTML = code;
+}
+
+function generateNode() {
+  const token = document.getElementById('botToken').value || 'YOUR_BOT_TOKEN';
+
+  let code = `<span class="cm">// Telegram Command Bot - Auto Generated
+// Install: npm install node-telegram-bot-api axios</span>
+
+<span class="kw">const</span> TelegramBot = require(<span class="str">'node-telegram-bot-api'</span>);
+<span class="kw">const</span> axios = require(<span class="str">'axios'</span>);
+
+<span class="kw">const</span> TOKEN = <span class="str">'${token}'</span>;
+<span class="kw">const</span> bot = <span class="kw">new</span> <span class="fn">TelegramBot</span>(TOKEN, { polling: <span class="kw">true</span> });
+
+`;
+
+commands.forEach(c => {
+    const hasArg = c.url.includes('{arg}');
+    code += `bot.onText(<span class="str">/\\/${c.name}(.*)/</span>, <span class="kw">async</span> (msg, match) => {
+  <span class="kw">const</span> chatId = msg.chat.id;
+  <span class="kw">try</span> {`;
+
+    if (hasArg) {
+      code += `
+    <span class="kw">const</span> arg = match[<span class="num">1</span>].trim();
+    <span class="kw">const</span> url = <span class="str">'${c.url}'</span>.replace(<span class="str">'{arg}'</span>, arg);`;
+    } else {
+      code += `
+    <span class="kw">const</span> url = <span class="str">'${c.url}'</span>;`;
+    }
+
+    code += `
+    <span class="kw">const</span> res = <span class="kw">await</span> axios.${c.method.toLowerCase()}(url);
+    <span class="cm">// Template: ${c.template || 'Raw JSON response'}</span>
+    bot.sendMessage(chatId, JSON.stringify(res.data, <span class="kw">null</span>, <span class="num">2</span>).slice(<span class="num">0</span>, <span class="num">4000</span>));
+  } <span class="kw">catch</span> (e) {
+    bot.sendMessage(chatId, <span class="str">\`Error: \${e.message}\`</span>);
+  }
+});
+
+`;
+  });
+
+  code += `console.log(<span class="str">'Bot running...'</span>);`;
+  document.getElementById('codeBlock').innerHTML = code;
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  generateCode();
+}
+
+function copyCode() {
+  const text = document.getElementById('codeBlock').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+}
+
+// Regenerate on token change
+document.getElementById('botToken').addEventListener('input', generateCode);
+
+
+    
